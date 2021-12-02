@@ -1,8 +1,4 @@
-const {
-  example,
-  calculatePosition,
-  calculatePositionWithAim,
-} = require("./puzzle");
+const { example, calculatePosition, calculatePositionWithAim } = require(".");
 
 test("02a - should calculate the position of the sub", () => {
   expect(calculatePosition(example)).toBe(150);

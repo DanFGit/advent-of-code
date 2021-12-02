@@ -2,7 +2,7 @@ const {
   example,
   countDepthIncreases,
   countSlidingDepthIncreases,
-} = require("./puzzle");
+} = require(".");
 
 test("01a - should count how many times the depth increases", () => {
   expect(countDepthIncreases(example)).toBe(7);
