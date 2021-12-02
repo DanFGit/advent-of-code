@@ -4,10 +4,10 @@ const {
   calculatePositionWithAim,
 } = require("./puzzle");
 
-test("should calculate the position of the sub", () => {
+test("02a - should calculate the position of the sub", () => {
   expect(calculatePosition(example)).toBe(150);
 });
 
-test("should calculate the position of the sub with aim", () => {
+test("02b - should calculate the position of the sub with aim", () => {
   expect(calculatePositionWithAim(example)).toBe(900);
 });
