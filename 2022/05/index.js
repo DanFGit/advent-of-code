@@ -65,7 +65,7 @@ const moveCratesOneByOne = (stacks, instructions) => {
   });
 };
 
-// Part 1
+// Part 2
 const moveCratesInGroups = (stacks, instructions) => {
   // loop over each instruction
   instructions.forEach((instruction) => {
@@ -113,11 +113,6 @@ const findContainersOnTop9001 = ([drawing, instructions]) => {
     ""
   );
 };
-
-// const findAnyOverlaps = (assignments) => {
-//   let overlaps = 0;
-//   return overlaps;
-// };
 
 module.exports = {
   input,
