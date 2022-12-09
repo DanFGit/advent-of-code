@@ -18,96 +18,46 @@ const example = loadInput("example");
  * PUZZLE STARTS HERE *
  **********************/
 
-const print = (head, tail) => {
-  process.stdout.write(`\n`);
-  process.stdout.write(`== ==`);
-  process.stdout.write(`\n`);
-  process.stdout.write(`\n`);
-
-  for (let y = 0; y < 5; y += 1) {
-    for (let x = 0; x < 6; x += 1) {
-      if (head.x === x && head.y === y) process.stdout.write(`H`);
-      else if (tail.x === x && tail.y === y) process.stdout.write(`T`);
-      else if (x === 0 && y === 5) process.stdout.write(`s`);
-      else process.stdout.write(`.`);
-    }
-
-    process.stdout.write(`\n`);
-  }
-};
+const START_X = 0;
+const START_Y = 0;
 
 const pullTail = (head, tail) => {
-  const xDis = head.x - tail.x;
-  const yDis = head.y - tail.y;
+  const xDis = head.x - tail.x; // -1
+  const yDis = head.y - tail.y; // -2
 
   // if they are touching, don't move the tail
-  if (Math.abs(xDis) < 2 && Math.abs(yDis) < 2) return "touching";
+  if (Math.abs(xDis) < 2 && Math.abs(yDis) < 2) return;
 
-  if (yDis === 0 && xDis < 0) {
+  if (yDis === 0 && xDis < 0) tail.x -= 1; // left
+  else if (yDis === 0 && xDis > 0) tail.x += 1; // right
+  else if (xDis === 0 && yDis < 0) tail.y -= 1; // up
+  else if (xDis === 0 && yDis > 0) tail.y += 1; // down
+  else if (xDis <= 0 && yDis <= 0) {
     tail.x -= 1; // left
-    return "left";
-  } else if (yDis === 0 && xDis > 0) {
-    tail.x += 1; // right
-    return "right";
-  } else if (xDis === 0 && yDis < 0) {
     tail.y -= 1; // up
-    return "up";
-  } else if (xDis === 0 && yDis > 0) {
+  } else if (xDis >= 0 && yDis >= 0) {
+    tail.x += 1; // right
     tail.y += 1; // down
-    return "down";
+  } else if (xDis >= 0 && yDis <= 0) {
+    tail.x += 1; // right
+    tail.y -= 1; // up
+  } else if (xDis <= 0 && yDis >= 0) {
+    tail.x -= 1; // left
+    tail.y += 1; // down
   }
-
-  console.log(head, tail, xDis, yDis);
-  if (yDis <= 1 && xDis <= 1) {
-    tail.x -= 1; // left
-    tail.y -= 1; // up
-    return "nw";
-  } else if (yDis <= 1 && xDis >= 1) {
-    tail.x += 1; // right
-    tail.y -= 1; // up
-    return "ne";
-  } else if (yDis >= 1 && xDis >= 1) {
-    tail.x += 1; // right
-    tail.y += 1; // down
-    return "se";
-  } else if (yDis >= 1 && xDis <= 1) {
-    tail.x -= 1; // left
-    tail.y += 1; // down
-    return "sw";
-  }
-
-  return tail;
 };
-
-// .1.2.
-// 8...3
-// ..T..
-// 7...4
-// .6.5.
-// console.log(pullTail({ x: -1, y: -2 }, { x: 0, y: 0 }));
-// console.log(pullTail({ x: 1, y: -2 }, { x: 0, y: 0 }));
-// console.log(pullTail({ x: 2, y: -1 }, { x: 0, y: 0 }));
-// console.log(pullTail({ x: 2, y: 1 }, { x: 0, y: 0 }));
-// console.log(pullTail({ x: 1, y: 2 }, { x: 0, y: 0 }));
-// console.log(pullTail({ x: -1, y: 2 }, { x: 0, y: 0 }));
-// console.log(pullTail({ x: -2, y: 1 }, { x: 0, y: 0 }));
-// console.log(pullTail({ x: -2, y: -1 }, { x: 0, y: 0 }));
 
 const findTailVisits = (motions) => {
   let visited = {
-    "0,5": 1, // tail starts in the center
+    [`${START_X},${START_Y}`]: 1,
   };
 
-  const head = { x: 0, y: 4 };
-  const tail = { x: 0, y: 4 };
-
-  print(head, tail);
+  const head = { x: START_X, y: START_Y };
+  const tail = { x: START_X, y: START_Y };
 
   motions.forEach((motion) => {
     const dir = motion.split(" ")[0];
     const steps = Number(motion.split(" ")[1]);
-
-    // console.log(`\n\ngo ${steps} ${dir}`);
 
     for (let i = 0; i < steps; i += 1) {
       if (dir === "L") head.x -= 1;
@@ -115,26 +65,66 @@ const findTailVisits = (motions) => {
       if (dir === "U") head.y -= 1;
       if (dir === "D") head.y += 1;
 
-      print(head, tail);
-      // console.log(head);
+      pullTail(head, tail);
+
+      if (!visited[`${tail.x},${tail.y}`]) visited[`${tail.x},${tail.y}`] = 1;
+      else visited[`${tail.x},${tail.y}`] += 1;
     }
   });
 
-  return 0;
+  return Object.keys(visited).length;
 };
 
-const findHighestScenicScore = (motions) => {
-  let highest = 0;
+const findNineTailVisits = (motions) => {
+  let visited = {
+    [`${START_X},${START_Y}`]: 1,
+  };
 
-  return highest;
+  // couldn't be bothered making this dynamic...
+  const head = { x: START_X, y: START_Y };
+  const tail1 = { x: START_X, y: START_Y };
+  const tail2 = { x: START_X, y: START_Y };
+  const tail3 = { x: START_X, y: START_Y };
+  const tail4 = { x: START_X, y: START_Y };
+  const tail5 = { x: START_X, y: START_Y };
+  const tail6 = { x: START_X, y: START_Y };
+  const tail7 = { x: START_X, y: START_Y };
+  const tail8 = { x: START_X, y: START_Y };
+  const tail9 = { x: START_X, y: START_Y };
+
+  motions.forEach((motion) => {
+    const dir = motion.split(" ")[0];
+    const steps = Number(motion.split(" ")[1]);
+
+    for (let i = 0; i < steps; i += 1) {
+      if (dir === "L") head.x -= 1;
+      if (dir === "R") head.x += 1;
+      if (dir === "U") head.y -= 1;
+      if (dir === "D") head.y += 1;
+
+      // didn't even need to change the pullTail function from part one
+      pullTail(head, tail1);
+      pullTail(tail1, tail2);
+      pullTail(tail2, tail3);
+      pullTail(tail3, tail4);
+      pullTail(tail4, tail5);
+      pullTail(tail5, tail6);
+      pullTail(tail6, tail7);
+      pullTail(tail7, tail8);
+      pullTail(tail8, tail9);
+
+      if (!visited[`${tail9.x},${tail9.y}`])
+        visited[`${tail9.x},${tail9.y}`] = 1;
+      else visited[`${tail9.x},${tail9.y}`] += 1;
+    }
+  });
+
+  return Object.keys(visited).length;
 };
 
 module.exports = {
   input,
   example,
   findTailVisits,
-  findHighestScenicScore,
+  findNineTailVisits,
 };
-
-// console.log("\n\nPart 1 - Example:", findTailVisits(example));
-// console.log("Part 1 - Actual: ", calculatePosition(input));
