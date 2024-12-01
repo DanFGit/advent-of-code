@@ -1,5 +1,9 @@
-import { temp } from ".";
+import { example, input, totalDistanceBetweenLists, similarityScore } from ".";
 
-it("should be", () => {
-  expect(temp).toBe("hello");
+it("should calculate the distance between the two lists", () => {
+  expect(totalDistanceBetweenLists(example)).toBe(11);
+});
+
+it("should calculate the similarity score of the two lists", () => {
+  expect(similarityScore(input)).toBe(31);
 });
