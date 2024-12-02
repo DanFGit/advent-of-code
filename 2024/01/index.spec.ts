@@ -5,5 +5,5 @@ it("should calculate the distance between the two lists", () => {
 });
 
 it("should calculate the similarity score of the two lists", () => {
-  expect(similarityScore(input)).toBe(31);
+  expect(similarityScore(example)).toBe(31);
 });
